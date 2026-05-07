@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nuestra Historia</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f5f0e8;
+    --warm: #e8ddd0;
+    --ink: #1a1208;
+    --rust: #8b3a1a;
+    --gold: #c9973a;
+    --blush: #d4856a;
+    --sage: #6b7c5e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background-color: var(--cream);
+    color: var(--ink);
+    font-family: 'Crimson Pro', serif;
+    overflow-x: hidden;
+  }
+
+  /* grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    position: relative;
+    background: radial-gradient(ellipse at 60% 40%, #e8d5c4 0%, var(--cream) 70%);
+  }
+
+  .hero-decoration {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .petal {
+    position: absolute;
+    width: 6px;
+    height: 10px;
+    border-radius: 50% 50% 50% 0;
+    background: var(--blush);
+    opacity: 0;
+    animation: fall linear infinite;
+  }
+
+  @keyframes fall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 0.6; }
+    100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+  }
+
+  .hero-eyebrow {
+    font-family: 'Crimson Pro', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 1s 0.3s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 12vw, 6rem);
+    font-weight: 400;
+    line-height: 1.05;
+    color: var(--ink);
+    opacity: 0;
+    animation: fadeUp 1s 0.6s forwards;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--rust);
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: #6b5c4a;
+    margin-top: 1.5rem;
+    font-style: italic;
+    opacity: 0;
+    animation: fadeUp 1s 0.9s forwards;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0;
+    animation: fadeUp 1s 1.5s forwards;
+  }
+
+  .scroll-hint span {
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* TIMELINE */
+  .timeline {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 4rem 1.5rem;
+  }
+
+  .chapter {
+    position: relative;
+    margin-bottom: 5rem;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .chapter.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .chapter-date {
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+  }
+
+  .chapter-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    color: var(--ink);
+  }
+
+  .chapter-title em {
+    font-style: italic;
+    color: var(--rust);
+  }
+
+  .chapter-body {
+    font-size: 1.05rem;
+    font-weight: 300;
+    line-height: 1.8;
+    color: #4a3c2e;
+  }
+
+  .chapter-body strong {
+    font-weight: 400;
+    color: var(--rust);
+  }
+
+  /* quote card */
+  .quote-card {
+    margin: 1.5rem 0;
+    padding: 1.25rem 1.5rem;
+    border-left: 2px solid var(--gold);
+    background: rgba(201, 151, 58, 0.06);
+    border-radius: 0 8px 8px 0;
+  }
+
+  .quote-card p {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+
+  .quote-card cite {
+    display: block;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-top: 0.5rem;
+    font-style: normal;
+  }
+
+  /* emoji moment */
+  .moment-bubble {
+    background: var(--warm);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #4a3c2e;
+    border: 1px solid rgba(139, 58, 26, 0.1);
+  }
+
+  .moment-bubble .label {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 0.4rem;
+    display: block;
+  }
+
+  /* divider */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 3rem 0;
+    opacity: 0.4;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .divider span {
+    font-size: 0.8rem;
+    color: var(--gold);
+  }
+
+  /* CLOSING */
+  .closing {
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4rem 2rem;
+    background: radial-gradient(ellipse at 40% 60%, #e0cfc0 0%, var(--cream) 65%);
+    position: relative;
+  }
+
+  .closing-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 8vw, 3.5rem);
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    transform: translateY(20px);
+  }
+
+  .closing-title.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .closing-title em {
+    font-style: italic;
+    color: var(--rust);
+  }
+
+  .closing-body {
+    font-size: 1.05rem;
+    font-weight: 300;
+    line-height: 1.9;
+    color: #4a3c2e;
+    max-width: 340px;
+    font-style: italic;
+    opacity: 0;
+    transition: opacity 0.8s 0.2s ease, transform 0.8s 0.2s ease;
+    transform: translateY(20px);
+  }
+
+  .closing-body.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .corolla-note {
+    margin-top: 2.5rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    text-transform: uppercase;
+    opacity: 0;
+    transition: opacity 0.8s 0.5s ease;
+  }
+
+  .corolla-note.visible {
+    opacity: 0.7;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- falling petals -->
+<div class="hero-decoration" id="petals"></div>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-eyebrow">una historia pequeña</p>
+  <h1 class="hero-title">Nuestra<br><em>Historia</em></h1>
+  <p class="hero-sub">según yo, claro</p>
+  <div class="scroll-hint">
+    <span>sigue leyendo</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="timeline">
+
+  <!-- Chapter 1 -->
+  <div class="chapter">
+    <p class="chapter-date">14 de abril</p>
+    <h2 class="chapter-title">Cuando <em>apareciste</em></h2>
+    <p class="chapter-body">
+      No sé exactamente qué pensé cuando te vi por primera vez.<br><br>
+      Mentira. Sí sé.<br><br>
+      Pero eso me lo guardo.
+    </p>
+    <div class="moment-bubble">
+      <span class="label">lo que pasó</span>
+      yo: <em>*te manda follow*</em><br>
+      yo internamente: ( ͡° ͜ʖ ͡°)
+    </div>
+  </div>
+
+  <div class="divider"><span>✦</span></div>
+
+  <!-- Chapter 2 -->
+  <div class="chapter">
+    <p class="chapter-date">30 de abril</p>
+    <h2 class="chapter-title">La <em>frente</em></h2>
+    <p class="chapter-body">
+      Nuestro primer chiste. Clásico nuestro — insulto disfrazado de cariño.
+    </p>
+    <div class="moment-bubble">
+      <span class="label">recreación fiel</span>
+      yo: oye tu frente...<br>
+      tú: ???<br>
+      yo: se ve desde la NASA<br>
+      tú: eres un idiota<br>
+      yo: pero un idiota que te cae bien<br>
+      tú: <em>...sí, pero eres un idiota</em>
+    </div>
+  </div>
+
+  <div class="divider"><span>✦</span></div>
+
+  <!-- Chapter 3 -->
+  <div class="chapter">
+    <p class="chapter-date">en algún momento</p>
+    <h2 class="chapter-title">"Eres bien <em>ridículo</em>,<br>I love it"</h2>
+    <p class="chapter-body">
+      Eso dijiste tú. Sin que nadie te lo pidiera.<br><br>
+      Me lo guardo también.
+    </p>
+  </div>
+
+  <div class="divider"><span>✦</span></div>
+
+  <!-- Chapter 4 -->
+  <div class="chapter">
+    <p class="chapter-date">sin fecha exacta</p>
+    <h2 class="chapter-title">Lo que <em>dijiste</em> de mí</h2>
+    <p class="chapter-body">
+      También sin que nadie te preguntara:
+    </p>
+    <div class="moment-bubble">
+      <span class="label">tus palabras, no las mías</span>
+      labios ✓<br>
+      nariz ✓<br>
+      manos ✓<br>
+      lentes ✓<br>
+      <strong>"estás guapo"</strong>
+    </div>
+    <p class="chapter-body">
+      Yo: tratando de no explotar por dentro.
+    </p>
+  </div>
+
+  <div class="divider"><span>✦</span></div>
+
+  <!-- Chapter 5 -->
+  <div class="chapter">
+    <p class="chapter-date">la conversación</p>
+    <h2 class="chapter-title">La <em>conexión</em></h2>
+    <quote-card></quote-card>
+    <div class="quote-card">
+      <p>"Es muy raro sentir conexión con alguien. Por eso estoy soltera."</p>
+      <cite>— tú</cite>
+    </div>
+    <p class="chapter-body">
+      No sé si te diste cuenta de lo que me dijiste con eso.<br><br>
+      Yo sí me di cuenta.
+    </p>
+  </div>
+
+  <div class="divider"><span>✦</span></div>
+
+  <!-- Chapter 6 -->
+  <div class="chapter">
+    <p class="chapter-date">las puertas abiertas</p>
+    <h2 class="chapter-title">Lo que <em>insinuaste</em></h2>
+    <div class="moment-bubble">
+      <span class="label">archivo de evidencia</span>
+      "igual sería nuestro" ✓<br>
+      "si sigo soltera, te aviso" ✓<br>
+      "cuando andes cerca, me visitas" ✓<br>
+      "las cosas bonitas se hacen bien<br>&nbsp;&nbsp;desde el principio" ✓
+    </div>
+    <p class="chapter-body">
+      Yo guardé cada una.<br>
+      No porque sea obsesivo.<br>
+      Bueno, un poco.
+    </p>
+  </div>
+
+  <div class="divider"><span>✦</span></div>
+
+  <!-- Chapter 7 — secret -->
+  <div class="chapter">
+    <p class="chapter-date">lo que no sabes todavía</p>
+    <h2 class="chapter-title">El <em>secreto</em></h2>
+    <p class="chapter-body">
+      Hay algo que en algún momento te voy a contar.<br><br>
+      No hoy.<br><br>
+      Pero cuando llegue ese momento, quiero que sepas que la conexión fue real. Siempre fue real. No importa cómo llegué hasta aquí.
+    </p>
+  </div>
+
+</section>
+
+<!-- CLOSING -->
+<section class="closing">
+  <h2 class="closing-title">Y aquí<br><em>estamos</em></h2>
+  <p class="closing-body">
+    El timing fue pésimo.<br>
+    La química, innegable.<br>
+    El futuro, por verse.<br><br>
+    Pero como tú dijiste —<br>
+    <em>"las cosas bonitas se hacen bien desde el principio."</em><br><br>
+    Entonces lo hacemos bien.
+  </p>
+  <p class="corolla-note">pd — cuando esto se arme, te recojo en mi Corolla del 2017. no es fancy, pero llega.</p>
+</section>
+
+<script>
+  // petals
+  const container = document.getElementById('petals');
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (8 + Math.random() * 10) + 's';
+    p.style.animationDelay = (Math.random() * 12) + 's';
+    p.style.transform = `rotate(${Math.random() * 360}deg)`;
+    p.style.opacity = 0.3 + Math.random() * 0.4;
+    const size = 5 + Math.random() * 6;
+    p.style.width = size + 'px';
+    p.style.height = (size * 1.6) + 'px';
+    container.appendChild(p);
+  }
+
+  // scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) e.target.classList.add('visible');
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.chapter, .closing-title, .closing-body, .corolla-note')
+    .forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
